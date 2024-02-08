@@ -1,0 +1,8 @@
+.user-badge {
+  background: lightgrey;
+  cursor: pointer;
+
+  &.selected {
+    background: cadetblue;
+  }
+}

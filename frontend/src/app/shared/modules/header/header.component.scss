@@ -1,0 +1,15 @@
+@use "styles";
+
+.header {
+  background: styles.$primary;
+  color: white;
+  position: relative;
+
+  .nav-link {
+    color: white;
+
+    &.active {
+      border-bottom: 2px solid white;
+    }
+  }
+}

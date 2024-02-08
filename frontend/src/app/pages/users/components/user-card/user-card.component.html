@@ -1,0 +1,22 @@
+<div class="card position-relative">
+  <button (click)="deleteUser(user.id, $event)" class="delete-btn btn btn-warning">
+    X
+  </button>
+
+  @if (badges) {
+    <div class="user-badges d-flex">
+      @for (userBadge of user.badges; track userBadge) {
+        <div class="user-badge">
+          <img [src]="getBadgeImage(userBadge.id)" alt="badge_image"/>
+        </div>
+      }
+    </div>
+  }
+
+  <div class="user-image">
+    <img class="w-100" [src]="user.image" alt="user-avatar">
+  </div>
+  <div class="card-body user-title">
+    <h5 class="m-0">{{user.name}}</h5>
+  </div>
+</div>

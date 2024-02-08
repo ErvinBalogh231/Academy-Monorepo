@@ -1,0 +1,20 @@
+<div class="p-2">
+    <button (click)="navigateToCreateUser()" class="btn btn-primary">
+        Create
+    </button>
+</div>
+
+<div class="container my-4">
+    <div class="row g-4">
+        @for (user of users; track user.id) {
+            <div class="col-4">
+                <app-user-card
+                    (click)="navigateToEditUser(user.id)"
+                    (deleteClicked)="deleteUser($event)"
+                    [badges]="badges"
+                    [user]="user"
+                />
+            </div>
+        }
+    </div>
+</div>
