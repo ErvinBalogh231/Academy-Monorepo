@@ -2,8 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { CounterComponent } from './shared/counter/counter.component';
-import { UsersComponent } from './pages/users/users.component';
-import { BadgesComponent } from './pages/badges/badges.component';
+
+import { UsersComponent } from './pages/users/users/users.component';
+import { BadgesComponent } from './pages/badges/badges/badges.component';
 
 const routes: Routes = [
   { path: 'counter', component: CounterComponent },
