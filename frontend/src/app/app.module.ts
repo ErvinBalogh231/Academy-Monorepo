@@ -7,10 +7,11 @@ import { RouterOutlet } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { UsersModule } from './pages/users/users.module';
 import { BadgesModule } from './pages/badges/badges.module';
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, HeaderComponent, CounterComponent, RouterOutlet, AppRoutingModule, UsersModule, BadgesModule],
+  imports: [BrowserModule, HeaderComponent, CounterComponent, RouterOutlet, AppRoutingModule, UsersModule, BadgesModule, HttpClientModule],
   providers: [],
   bootstrap: [AppComponent],
 })
