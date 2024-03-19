@@ -14,7 +14,7 @@ namespace Academy_2024.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.2");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.3");
 
             modelBuilder.Entity("Academy_2024.Models.Course", b =>
                 {
@@ -46,6 +46,10 @@ namespace Academy_2024.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
