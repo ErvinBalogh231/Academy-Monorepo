@@ -1,18 +1,33 @@
 <div class="container my-4">
-    //Form
-    <form class="p-3">
+    Form
+    <form [formGroup]="userCrateForm" class="p-3">
         <div class="mb-3">
-            //Name
+            <label class="form-label">
+                Name
+                @if(userCrateForm | isControlRequired:'name'){
+                    <span>*</span>
+                }
+            </label>
+
+            <div>
+                <input class="form-control" formControlName="name" name="name">
+            </div>
         </div>
 
         <div class="mb-3">
-            //Image
+            <label>
+                Image
+                @if(userCrateForm | isControlRequired:'image'){
+                    <span>*</span>
+                }
+            </label>
 
-
+            <div>
+                <input class="form-control" formControlName="image" name="image">
+            </div>
         </div>
         <div class="mb-3">
-            //Save button
-            <button>
+            <button class="btn btn-primary" [disabled]="userCrateForm.invalid">
                 Save
             </button>
 
