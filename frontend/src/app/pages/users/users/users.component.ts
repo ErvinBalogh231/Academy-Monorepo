@@ -29,4 +29,8 @@ export class UsersComponent implements OnInit{
   navigateToCreateUser() {
     this.router.navigate(['user-create']);
   }
+
+  navigateToEditUser(userId:number){
+    this.router.navigateByUrl(`user-edit/${userId}`)
+  }
 }
