@@ -27,7 +27,9 @@
             </div>
         </div>
         <div class="mb-3">
-            <button class="btn btn-primary" [disabled]="userCrateForm.invalid">
+            <button (click)="saveForm()"
+                    [disabled]="userCrateForm.invalid"
+                    class="btn btn-primary">
                 Save
             </button>
 

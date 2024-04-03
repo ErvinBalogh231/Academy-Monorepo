@@ -1,4 +1,7 @@
-<div class="card">
+<div class="card position-relative">
+    <button (click)="deleteUser(user.id, $event)" class="delete-btn btn btn-warning">
+        X
+    </button>
   <div class="user-image">
     <img class="w-100" [src]="user.image" alt="user-avatar">
   </div>

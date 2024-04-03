@@ -1,1 +1,9 @@
-<p>badges works!</p>
+<div class="container my-4">
+    <div class="row g-4">
+        @for (badge of badges; track badge) {
+            <div class="col-4">
+                <app-badge-card [badge]="badge"></app-badge-card>
+            </div>
+        }
+    </div>
+</div>

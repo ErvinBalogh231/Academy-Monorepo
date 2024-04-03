@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { User } from '../classes/User';
 
 @Component({
@@ -8,4 +8,12 @@ import { User } from '../classes/User';
 })
 export class UserCardComponent {
   @Input() user: User;
+
+  @Output() deleteClicked = new EventEmitter<number>
+
+  deleteUser(id: number, event: MouseEvent) {
+    event.stopPropagation()
+
+    this.deleteClicked.emit(id)
+  }
 }

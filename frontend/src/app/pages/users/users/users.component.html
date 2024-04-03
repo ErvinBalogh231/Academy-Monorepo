@@ -6,7 +6,10 @@
   <div class="row g-4">
     @for (user of users; track user.id) {
       <div class="col-4">
-        <app-user-card [user]="user" (click)="navigateToEditUser(user.id)"></app-user-card>
+        <app-user-card [user]="user"
+                       (click)="navigateToEditUser(user.id)"
+                       (deleteClicked)="deleteUser($event)">
+        </app-user-card>
       </div>
     }
   </div>
