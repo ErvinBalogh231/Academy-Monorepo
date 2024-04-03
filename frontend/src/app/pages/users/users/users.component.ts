@@ -33,4 +33,14 @@ export class UsersComponent implements OnInit{
   navigateToEditUser(userId:number){
     this.router.navigateByUrl(`user-edit/${userId}`)
   }
+
+  deleteUser(userId:number) {
+    this.userService.deleteUser(userId).subscribe({
+      next: () => {
+        this.users = this.users.filter((user: User) => {
+          return user.id !== userId
+        })
+      }
+    })
+  }
 }
