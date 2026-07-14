@@ -1,58 +1,42 @@
-﻿using Academy_2024.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Academy_2024.Data;
+using Academy_2024.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Academy_2024.Repositories
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
-        private static List<User> Users = new List<User> { new User { Id = 1, FirstName = "Jhon", LastName = "Doe" } };
+        private readonly ApplicationDbContext _context;
+>>>>>>> db513bc (Third lesson)
 
-        public List<User> GetAll() { return Users; }
-
-        public User? GetById(int id)
+        public UserRepository(ApplicationDbContext context)
         {
-            foreach (var user in Users)
-            {
-                if (user.Id == id)
-                {
-                    return user;
-                }
-            }
-
-            return null;
+            _context = context;
         }
 
-        public void Create(User data)
+        public Task<List<User>> GetAllAsync() => _context.Users.ToListAsync();
+
+        public Task<User?> GetByIdAsync(int id) => _context.Users.FirstOrDefaultAsync(user => user.Id == id);
+
+        public Task<User?> GetByEmailAsync(string email) => _context.Users.FirstOrDefaultAsync(user => user.Email == email);
+
+        public async Task CreateAsync(User data)
         {
-            Users.Add(data);
+            await _context.Users.AddAsync(data);
+            await _context.SaveChangesAsync();
         }
 
-        public User? Update(int id, User data)
+        public Task UpdateAsync() => _context.SaveChangesAsync();
+
+        public async Task<bool> DeleteAsync(int id)
         {
-            foreach (var user in Users)
+            var user = await _context.Users.FirstOrDefaultAsync(user => user.Id == id);
+            if (user != null)
             {
-                if (user.Id == id)
-                {
-                    user.FirstName = data.FirstName;
-                    user.LastName = data.LastName;
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
 
-                    return user;
-                }
-            }
-
-            return null;
-        }
-
-        public bool Delete(int id)
-        {
-            foreach (var user in Users)
-            {
-                if (user.Id == id)
-                {
-                    Users.Remove(user);
-
-                    return true;
-                }
+                return true;
             }
 
             return false;

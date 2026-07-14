@@ -1,3 +1,4 @@
+
 @Academy_2024_HostAddress = http://localhost:5115
 
 GET {{Academy_2024_HostAddress}}/weatherforecast/

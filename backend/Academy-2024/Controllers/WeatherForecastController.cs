@@ -31,7 +31,6 @@ namespace Academy_2024.Controllers
             .ToArray();
 
             var json = JsonConvert.SerializeObject(result);
-
             return result;
         }
     }

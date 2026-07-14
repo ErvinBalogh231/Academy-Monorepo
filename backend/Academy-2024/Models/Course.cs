@@ -4,12 +4,11 @@ namespace Academy_2024.Models
 {
     public class Course
     {
-        [Required(ErrorMessage = "ID is required.")]
-        public int? Id { get; set; }
+        [Key]
+        public int Id { get; set; }
 
-        public string? CourseName { get; set; }
+        public string Title { get; set; } = string.Empty;
 
-        [MinLength(10)]
-        public string? CourseDescription { get; set; }
+        public ICollection<User> Users { get; set; } = [];
     }
 }
