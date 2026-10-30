@@ -1,13 +1,24 @@
 <nav class="navbar p-2 header">
-  <div class="d-flex">
-    <a [routerLink]="'/counter'" [routerLinkActive]="'active'" class="nav-link me-2">
-      Counter
-    </a>
-    <a [routerLink]="'/users'" [routerLinkActive]="'active'" class="nav-link me-2">
-      Users
-    </a>
-    <a [routerLink]="'/badges'" [routerLinkActive]="'active'" class="nav-link me-2">
-      Badges
-    </a>
+  <div class="d-flex justify-content-between align-items-center w-100">
+    <div class="d-flex">
+      <a [routerLink]="'/counter'" [routerLinkActive]="'active'" class="nav-link me-2">
+        Counter
+      </a>
+      <a [routerLink]="'/users'" [routerLinkActive]="'active'" class="nav-link me-2">
+        Users
+      </a>
+      <a [routerLink]="'/badges'" [routerLinkActive]="'active'" class="nav-link me-2">
+        Badges
+      </a>
+    </div>
+
+    <div class="d-flex align-items-center">
+      @if (loggedInUser$ | async; as user) {
+        <span class="me-2">{{ user.email }}</span>
+      }
+      <button (click)="logout()" class="btn btn-light btn-sm">
+        Logout
+      </button>
+    </div>
   </div>
 </nav>

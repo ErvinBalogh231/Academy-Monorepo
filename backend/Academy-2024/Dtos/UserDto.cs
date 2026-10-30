@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Academy_2024.Dtos
 {
@@ -13,9 +14,11 @@ namespace Academy_2024.Dtos
         public string? LastName { get; set; }
 
         [Required]
+        [EmailAddress]
         public string? Email { get; set; }
 
-        [Required]
+        // Only accepted on input (required on create, optional on update), never sent back
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? Password { get; set; }
     }
 }

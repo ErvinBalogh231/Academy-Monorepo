@@ -3,5 +3,4 @@ export interface Badge {
     name: string;
     description: string;
     image: string;
-    createAt: number;
 }

@@ -11,6 +11,12 @@ export class UserCardComponent {
 
   @Output() deleteClicked = new EventEmitter<number>
 
+  get initials(): string {
+    const initials = `${this.user.firstName?.[0] ?? ''}${this.user.lastName?.[0] ?? ''}`;
+
+    return (initials || this.user.email[0]).toUpperCase();
+  }
+
   deleteUser(id: number, event: MouseEvent) {
     event.stopPropagation()
 
