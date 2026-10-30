@@ -1,63 +1,42 @@
-﻿using Academy_2024.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using Academy_2024.Data;
+using Academy_2024.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Academy_2024.Repositories
 {
-    public class CourseRepository
+    public class CourseRepository : ICourseRepository
     {
-        private static List<Course> Courses = new List<Course>
-        { 
-            new Course { Id = 1, CourseName = "ASP.NET", CourseDescription = "Megismered a ASP.NET alapjait" }
-        };
+        private readonly ApplicationDbContext _context;
 
-        public List<Course> GetAll()
+        public CourseRepository(ApplicationDbContext context)
         {
-            return Courses;
+            _context = context;
         }
 
-        public Course? GetById(int id)
+        public Task<List<Course>> GetAllAsync() => _context.Courses.ToListAsync();
+
+        public Task<Course?> GetByIdAsync(int id) => _context.Courses.FirstOrDefaultAsync(course => course.Id == id);
+
+        public async Task CreateAsync(Course data)
         {
-            foreach (var course in Courses)
+            await _context.Courses.AddAsync(data);
+            await _context.SaveChangesAsync();
+        }
+
+        public Task UpdateAsync() => _context.SaveChangesAsync();
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var course = await _context.Courses.FirstOrDefaultAsync(course => course.Id == id);
+            if (course != null)
             {
-                if (course.Id == id) return course;
-            }
-            return null;
-        }
+                _context.Courses.Remove(course);
+                await _context.SaveChangesAsync();
 
-        public void Create(Course courseToAdd)
-        {
-            Courses.Add(courseToAdd);
-        }
-
-        public Course? Update(int id, Course modifieTo)
-        {
-            foreach (var course in Courses)
-            {
-                if  (course.Id == id)
-                {
-                    course.CourseName = modifieTo.CourseName;
-                    course.CourseDescription = modifieTo.CourseDescription;
-
-                    return course;
-                }
-            }
-            return null;
-        }
-
-        public bool Delete(int id)
-        {
-            foreach(var course in Courses)
-            {
-                if (course.Id == id)
-                {
-                    Courses.Remove(course);
-
-                    return true;
-                }
+                return true;
             }
 
             return false;
         }
-
     }
 }

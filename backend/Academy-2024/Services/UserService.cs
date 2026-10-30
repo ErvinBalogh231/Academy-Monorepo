@@ -48,6 +48,11 @@ namespace Academy_2024.Services
                 user.LastName = data.LastName;
                 user.Email = data.Email;
 
+                if (!string.IsNullOrEmpty(data.Password))
+                {
+                    user.Password = PasswordHasher.HashPassword(data.Password);
+                }
+
                 await _userRepository.UpdateAsync();
             }
 
@@ -59,8 +64,7 @@ namespace Academy_2024.Services
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Email = user.Email,
-                Password = user.Password
+                Email = user.Email
             };
 
         private static User MapToModel(UserDto userDto) => new()

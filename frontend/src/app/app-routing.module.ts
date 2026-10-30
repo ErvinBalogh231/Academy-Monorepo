@@ -7,14 +7,18 @@ import { UsersComponent } from './pages/users/users/users.component';
 import { BadgesComponent } from './pages/badges/badges/badges.component';
 import {UserCreateComponent} from "./pages/user-create/user-create.component";
 import {UserEditComponent} from "./pages/user-edit/user-edit.component";
+import {LoginComponent} from "./pages/login/login.component";
+import {authGuard} from "./shared/guards/auth.guard";
 
 const routes: Routes = [
-  { path: 'counter', component: CounterComponent },
-  { path: 'users', component: UsersComponent },
-  { path: 'badges', component: BadgesComponent },
-  { path: 'user-create', component: UserCreateComponent },
-  { path: 'user-edit/:userId', component: UserEditComponent },
-  { path: '**', redirectTo: 'counter' }
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: UserCreateComponent },
+  { path: 'counter', component: CounterComponent, canActivate: [authGuard] },
+  { path: 'users', component: UsersComponent, canActivate: [authGuard] },
+  { path: 'badges', component: BadgesComponent, canActivate: [authGuard] },
+  { path: 'user-create', component: UserCreateComponent, canActivate: [authGuard] },
+  { path: 'user-edit/:userId', component: UserEditComponent, canActivate: [authGuard] },
+  { path: '**', redirectTo: 'users' }
 ]
 
 @NgModule({

@@ -7,9 +7,11 @@ import { RouterOutlet } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { UsersModule } from './pages/users/users.module';
 import { BadgesModule } from './pages/badges/badges.module';
-import {HttpClientModule} from "@angular/common/http";
+import {provideHttpClient, withInterceptors} from "@angular/common/http";
 import {UserCreateModule} from "./pages/user-create/user-create.module";
 import {UserEditModule} from "./pages/user-edit/user-edit.module";
+import {LoginModule} from "./pages/login/login.module";
+import {authInterceptor} from "./shared/interceptors/auth.interceptor";
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,10 +23,10 @@ import {UserEditModule} from "./pages/user-edit/user-edit.module";
     AppRoutingModule,
     UsersModule,
     BadgesModule,
-    HttpClientModule,
     UserEditModule,
-    UserCreateModule],
-  providers: [],
+    UserCreateModule,
+    LoginModule],
+  providers: [provideHttpClient(withInterceptors([authInterceptor]))],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

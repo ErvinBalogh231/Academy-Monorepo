@@ -58,6 +58,16 @@ namespace Academy_2024
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+
+            // Allow the Angular dev server to call the API
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy => policy
+                    .WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? ["http://localhost:4200"])
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
+            });
 
             builder.Services.AddDbContext<ApplicationDbContext>(options
                 => options.UseSqlite(builder.Configuration.GetConnectionString("ApplicationDbContext")));
@@ -79,6 +89,12 @@ namespace Academy_2024
 
             var app = builder.Build();
 
+            // Create / update the database on startup
+            using (var scope = app.Services.CreateScope())
+            {
+                scope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
+            }
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -87,6 +103,8 @@ namespace Academy_2024
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();

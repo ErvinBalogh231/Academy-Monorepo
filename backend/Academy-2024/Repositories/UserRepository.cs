@@ -7,7 +7,6 @@ namespace Academy_2024.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly ApplicationDbContext _context;
->>>>>>> db513bc (Third lesson)
 
         public UserRepository(ApplicationDbContext context)
         {

@@ -16,6 +16,52 @@ namespace Academy_2024.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.3");
 
+            modelBuilder.Entity("Academy_2024.Models.Badge", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Badges");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Completed the first lesson",
+                            Image = "assets/badges/beginner.svg",
+                            Name = "Beginner"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Built a working ASP.NET API",
+                            Image = "assets/badges/backend.svg",
+                            Name = "Backend"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Built a working Angular app",
+                            Image = "assets/badges/frontend.svg",
+                            Name = "Frontend"
+                        });
+                });
+
             modelBuilder.Entity("Academy_2024.Models.Course", b =>
                 {
                     b.Property<int>("Id")

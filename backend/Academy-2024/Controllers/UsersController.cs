@@ -1,10 +1,9 @@
 ﻿using Academy_2024.Dtos;
 using Academy_2024.Services;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,7 +11,7 @@ namespace Academy_2024.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -30,7 +29,7 @@ namespace Academy_2024.Controllers
         }
 
         // GET api/<UsersController>/5
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<UserDto>> Get(int id)
         {
             var user = await _userService.GetByIdAsync(id);
@@ -38,19 +37,20 @@ namespace Academy_2024.Controllers
             return user == null ? NotFound() : user;
         }
 
-        // GET /me
-        [HttpGet]
-        [Route("me")]
+        // GET api/<UsersController>/me
+        [HttpGet("me")]
         public async Task<ActionResult<UserDto>> GetLoggedInUser()
         {
-            var handler = new JwtSecurityTokenHandler();
-            var jwtSecurityToken = handler.ReadJwtToken(await HttpContext.GetTokenAsync("access_token"));
-            var id = jwtSecurityToken.Claims.First(claim => claim.Type == "sub").Value;
+            // The JWT handler maps "sub" to NameIdentifier by default
+            var id = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            if (!int.TryParse(id, out var userId))
+            {
+                return Unauthorized();
+            }
 
-            var user = await _userService.GetByIdAsync(Int32.Parse(id));
+            var user = await _userService.GetByIdAsync(userId);
 
-            return user!;
-            
+            return user == null ? NotFound() : user;
         }
 
         // POST api/<UsersController>
@@ -58,22 +58,39 @@ namespace Academy_2024.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Post([FromBody] UserDto data)
         {
+            if (string.IsNullOrEmpty(data.Password))
+            {
+                ModelState.AddModelError(nameof(UserDto.Password), "The Password field is required.");
+                return ValidationProblem(ModelState);
+            }
+
+            if (await _userService.GetByEmailAsync(data.Email!) is not null)
+            {
+                return Conflict("A user with this email already exists.");
+            }
+
             await _userService.CreateAsync(data);
 
             return NoContent();
         }
 
         // PUT api/<UsersController>/5
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<ActionResult> Put(int id, [FromBody] UserDto data)
         {
+            var existing = await _userService.GetByEmailAsync(data.Email!);
+            if (existing is not null && existing.Id != id)
+            {
+                return Conflict("A user with this email already exists.");
+            }
+
             var user = await _userService.UpdateAsync(id, data);
 
             return user == null ? NotFound() : NoContent();
         }
 
         // DELETE api/<UsersController>/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
             return await _userService.DeleteAsync(id) ? NoContent() : NotFound();

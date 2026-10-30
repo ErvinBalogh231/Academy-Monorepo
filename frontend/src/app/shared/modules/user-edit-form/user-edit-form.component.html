@@ -1,38 +1,66 @@
 <div class="container my-4">
-    Form
-    <form [formGroup]="userCrateForm" class="p-3">
+    <h3>{{ user ? 'Edit user' : 'Create user' }}</h3>
+    <form (ngSubmit)="saveForm()" [formGroup]="userForm" class="p-3">
         <div class="mb-3">
-            <label class="form-label">
-                Name
-                @if(userCrateForm | isControlRequired:'name'){
+            <label class="form-label" for="firstName">
+                First name
+                @if(userForm | isControlRequired:'firstName'){
                     <span>*</span>
                 }
             </label>
-
-            <div>
-                <input class="form-control" formControlName="name" name="name">
-            </div>
+            <input class="form-control" formControlName="firstName" id="firstName">
+            @if (userForm.get('firstName').hasError('maxlength')) {
+                <div class="text-danger small">At most 10 characters.</div>
+            }
         </div>
 
         <div class="mb-3">
-            <label>
-                Image
-                @if(userCrateForm | isControlRequired:'image'){
+            <label class="form-label" for="lastName">
+                Last name
+                @if(userForm | isControlRequired:'lastName'){
                     <span>*</span>
                 }
             </label>
-
-            <div>
-                <input class="form-control" formControlName="image" name="image">
-            </div>
+            <input class="form-control" formControlName="lastName" id="lastName">
         </div>
+
         <div class="mb-3">
-            <button (click)="saveForm()"
-                    [disabled]="userCrateForm.invalid"
-                    class="btn btn-primary">
+            <label class="form-label" for="email">
+                Email
+                @if(userForm | isControlRequired:'email'){
+                    <span>*</span>
+                }
+            </label>
+            <input class="form-control" formControlName="email" id="email" type="email" autocomplete="username">
+            @if (userForm.get('email').touched && userForm.get('email').hasError('email')) {
+                <div class="text-danger small">Invalid email address.</div>
+            }
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="password">
+                Password
+                @if(userForm | isControlRequired:'password'){
+                    <span>*</span>
+                }
+            </label>
+            <input class="form-control" formControlName="password" id="password" type="password" autocomplete="new-password"
+                   [placeholder]="user ? 'Leave empty to keep the current password' : ''">
+            @if (userForm.get('password').hasError('minlength')) {
+                <div class="text-danger small">At least 6 characters.</div>
+            }
+        </div>
+
+        @if (errorMessage) {
+            <div class="alert alert-danger py-2">{{ errorMessage }}</div>
+        }
+
+        <div class="mb-3">
+            <button [disabled]="userForm.invalid"
+                    class="btn btn-primary"
+                    type="submit">
                 Save
             </button>
-
         </div>
     </form>
 </div>

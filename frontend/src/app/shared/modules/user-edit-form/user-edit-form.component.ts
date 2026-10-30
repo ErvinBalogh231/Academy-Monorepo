@@ -1,7 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {HttpErrorResponse} from "@angular/common/http";
 import {User} from "../../../pages/users/classes/User";
 import {UserService} from "../../../pages/users/users/services/user.service";
+import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 
 @Component({
@@ -12,9 +14,10 @@ import {Router} from "@angular/router";
 export class UserEditFormComponent implements OnInit{
   @Input() user:User
 
-  userCrateForm: FormGroup
+  userForm: FormGroup
+  errorMessage: string
 
-  constructor(private userService: UserService, private router: Router) {
+  constructor(private userService: UserService, private authService: AuthService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -22,28 +25,42 @@ export class UserEditFormComponent implements OnInit{
   }
 
   initForm() {
-    this.userCrateForm = new FormGroup({
-      name: new FormControl(this.user ? this.user.name :'', [Validators.minLength(3)],),
-      image: new FormControl(this.user ? this.user.image : '',[Validators.required])
+    this.userForm = new FormGroup({
+      firstName: new FormControl(this.user ? this.user.firstName : '', [Validators.maxLength(10)]),
+      lastName: new FormControl(this.user ? this.user.lastName : ''),
+      email: new FormControl(this.user ? this.user.email : '', [Validators.required, Validators.email]),
+      // Required only when creating; when editing, an empty password keeps the current one
+      password: new FormControl('', this.user ? [Validators.minLength(6)] : [Validators.required, Validators.minLength(6)])
     })
   }
 
   saveForm() {
-    const userFormData: User = this.userCrateForm.getRawValue()
-
-    if(this.user) {
-      this.userService.updateUser(this.user.id, userFormData).subscribe({
-        next: () => {
-          this.router.navigate(['users'])
-        }
-      })
-    } else {
-      this.userService.createUser(userFormData).subscribe({
-        next: () => {
-          this.router.navigate(['users'])
-        }
-      })
+    const userFormData: User = this.userForm.getRawValue()
+    if (!userFormData.password) {
+      delete userFormData.password
     }
+
+    this.errorMessage = null
+
+    const request = this.user
+      ? this.userService.updateUser(this.user.id, userFormData)
+      : this.userService.createUser(userFormData)
+
+    request.subscribe({
+      next: () => {
+        if (this.user && this.user.id === this.authService.getLoggedInUserValue()?.id) {
+          this.authService.loadLoggedInUser()
+        }
+
+        // Registering (not logged in) goes back to the login page
+        this.router.navigate([this.authService.isLoggedIn() ? 'users' : 'login'])
+      },
+      error: (error: HttpErrorResponse) => {
+        this.errorMessage = error.status === 409
+          ? 'A user with this email already exists.'
+          : 'Saving the user failed.'
+      }
+    })
   }
 
 }
